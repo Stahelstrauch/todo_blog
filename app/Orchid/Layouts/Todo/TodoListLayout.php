@@ -87,11 +87,13 @@ class TodoListLayout extends Table
                 ->align(TD::ALIGN_CENTER)
                 ->width('120px')
                 ->render(function(Todo $todo) {
-                    return'<dic class"d-flex justify-content-center gap-1">' 
-                    . 
+                    return '<div class="d-flex justify-content-center gap-2">' 
+                    .
+
                     Link::make('')
                         ->route('platform.todos.edit', $todo->id)
-                        ->icon('bs.pensil')
+                        ->icon('bs.pencil')
+
                     .
 
                     Button::make('')
@@ -100,7 +102,9 @@ class TodoListLayout extends Table
                         ->method('removeFromList', [
                             'todo' => $todo->id,
                         ])
-                        .'</div>';
+
+                    .
+                    '</div>';
                 }),  
 
         ];

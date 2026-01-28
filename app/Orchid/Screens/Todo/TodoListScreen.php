@@ -4,7 +4,7 @@ namespace App\Orchid\Screens\Todo;
 
 use App\Models\Todo;
 use App\Orchid\Layouts\Todo\TodoListLayout;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Toast;

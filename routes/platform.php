@@ -12,8 +12,11 @@ use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\Post\PostEditScreen;
+use App\Orchid\Screens\Post\PostListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\Todo\TodoEditScreen;
 use App\Orchid\Screens\Todo\TodoListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
@@ -110,3 +113,22 @@ Route::screen('todos', TodoListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => 
         $trail->parent('platform.index')
             ->push('ToDo', route('platform.todos')));
+
+Route::screen('todos/create', TodoEditScreen::class)
+    ->name('platform.todos.create')
+    ->breadcrumbs(fn (Trail $trail) => 
+        $trail->parent('platform.todos')
+            ->push('Lisa uus'));
+
+Route::screen('todos/{todo}/edit', TodoEditScreen::class)
+    ->name('platform.todos.edit')
+    ->breadcrumbs(fn (Trail $trail) => 
+        $trail->parent('platform.todos')
+            ->push('Muuda'));
+
+
+Route::screen('posts', PostListScreen::class)
+    ->name('platform.posts');     
+
+Route::screen('posts/create', PostEditScreen::class)
+    ->name('platform.posts.create');     

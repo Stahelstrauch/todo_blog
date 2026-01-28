@@ -3,6 +3,10 @@
 namespace App\Orchid\Layouts\Todo;
 
 use Orchid\Screen\Field;
+use Orchid\Screen\Fields\CheckBox;
+use Orchid\Screen\Fields\DateTimer;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Layouts\Rows;
 
 class TodoEditLayout extends Rows
@@ -21,6 +25,29 @@ class TodoEditLayout extends Rows
      */
     protected function fields(): iterable
     {
-        return [];
+        return [
+            Input::make('todo.name')
+                ->title('Nimi')
+                ->placeholder('Nt. Osta piima')
+                ->required()
+                ->maxlength(150),
+
+            TextArea::make('todo.description')
+                ->title('Kirjeldus')
+                ->rows(5)
+                ->placeholder('Soovi korral lisa täpsustus (pole kohustuslik).'),
+
+            CheckBox::make('todo.is_done')
+                ->title('Tehtud')
+                ->sendTrueOrFalse()
+                ->help('Märgista, kui ülesanne on tehtud'),
+
+            DateTimer::make('todo.due_at')
+                ->title('Tähtaeg')
+                ->allowInput()
+                ->format('Y-m-d')
+                ->placeholder('Valikuline')
+
+        ];
     }
 }

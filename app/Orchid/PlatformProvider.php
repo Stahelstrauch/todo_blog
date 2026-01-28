@@ -79,6 +79,11 @@ class PlatformProvider extends OrchidServiceProvider
                     }
                 ),
 
+            Menu::make('Postitused')
+                ->icon('bs.file-text')
+                ->route('platform.posts')
+                ->permission('platform.posts'),   
+
 
             Menu::make(__('Users'))
                 ->icon('bs.people')
@@ -119,7 +124,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.systems.users', __('Users')),
 
             ItemPermission::group('Ise loodud')
-            ->addPermission('platform.todos', 'ToDo Haldamine'),
+                ->addPermission('platform.todos', 'ToDo Haldamine'),
+
+            ItemPermission::group('Blogi')
+            //TODO Kolm veel tulevikus juurde
+                ->addPermission('platform.posts', 'Postituste haldus')
         ];
     }
 }
