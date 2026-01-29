@@ -4,10 +4,12 @@ namespace App\Orchid\Screens\Post;
 
 use App\Models\Post;
 use Illuminate\Support\HtmlString;
+use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
 use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
 
 class PostListScreen extends Screen
 {
@@ -54,32 +56,92 @@ class PostListScreen extends Screen
      * @return \Orchid\Screen\Layout[]|string[]
      */
     public function layout(): iterable
-    {
-        return [
-            Layout::table('posts', [
-                TD::make('title', 'Pealkiri')->sort(),
-                TD::make('published_at', 'Olek')
-                    ->sort()
-                    ->render(function(Post $p) {
-                        //Mustand
-                        if($p->published_at === null) {
-                            return new HtmlString(
-                                '<span class="badge bg-secondary">'.e($p->published_at_date).'</span>'
-                            );
-                        }
-                        // Avaldub tulevikus
-                        if($p->published_at->isFuture()) {
-                            return new HtmlString(
-                                '<span class="badge bg-warning text-dark">Avaldatakse '.e($p->published_at_date).'</span'
-                            );
-                        }
-                         
-                        // Avaldatud
+{
+    return [
+        Layout::table('posts', [
+            TD::make('title', 'Pealkiri')->sort(),
+
+            TD::make('published_at', 'Olek')
+                ->sort()
+                ->render(function (Post $p) {
+                    if ($p->published_at === null) {
                         return new HtmlString(
-                            '<span class="badge bg-success"> Avaldatud '.e($p->published_at_date).'</span>'
+                            '<span class="badge bg-secondary">Mustand</span>'
                         );
-                    })
-            ])
-        ];
+                    }
+
+                    if ($p->published_at->isFuture()) {
+                        return new HtmlString(
+                            '<span class="badge bg-warning text-dark">
+                                Avaldatakse ' . e($p->published_at_date) . '
+                            </span>'
+                        );
+                    }
+
+                    return new HtmlString(
+                        '<span class="badge bg-success">
+                            Avaldatud ' . e($p->published_at_date) . '
+                        </span>'
+                    );
+                }),
+
+            TD::make('created_at', 'Loodud')
+                ->sort()
+                ->render(fn (Post $p) => $p->created_at_formatted ?? ''),
+
+            TD::make('action', 'Tegevused')
+                ->align(TD::ALIGN_CENTER)
+                ->width('120px')
+                ->render(function(Post $p) {
+                    return
+                    '<div class="d-flex justify-content-center gap-1">'
+                    .
+                    Link::make('')
+                        ->route('platform.posts.edit', $p->id)
+                        ->icon('bs.pencil')
+                        .
+                        Button::make('')
+                        ->icon('bs.trash')
+                        ->confirm('Kas oled kindel, et soovid kustutada?')
+                        ->method('remove', ['post' => $p->id])
+                        .'</div>';
+                }),
+        ])
+    ];
+    
+}
+   private function deleteFeaturedIfExists(?string $path) {
+        if(empty($path)) {
+            return;
+        }
+
+        $rel = $this->toPublicDiskRelative($path);
+        if(!empty($rel)) {
+            Storage::disk('public')->delete($rel);
+        }
     }
+
+    private function toPublicDiskRelative(?string $path) {
+        if(empty($path)) {
+            return;
+        }
+
+        $p = ltrim($path, '/');
+
+        if(str_starts_with($p, 'storage/')) {
+            $p = substr($p, strlen('storage/'));
+        }
+        return $p;
+    }
+
+    public function remove(Post $post) {
+        $this->deleteFeaturedIfExists($post->featured_image_path);
+        $post->delete();
+
+        Toast::info('Postitus kustutatud!');
+        return redirect()->route('platform.posts');
+    }
+
+
+
 }

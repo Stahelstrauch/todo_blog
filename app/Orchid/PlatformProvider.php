@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use App\Models\Post;
 use App\Models\Todo;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
@@ -82,8 +83,20 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('Postitused')
                 ->icon('bs.file-text')
                 ->route('platform.posts')
-                ->permission('platform.posts'),   
+                ->permission('platform.posts')
+                ->badge(function() {
+                    $today = now()->toDateString();
 
+                    $stats = Post::selectRaw(
+                        'COUNT(*) as total, SUM(CASE WHEN published_at IS NOT NULL AND DATE(published_at) <= ? THEN 1 ELSE 0 END) as published',
+                        [$today])->first();
+                    
+                    $published = (int) ($stats->published ?? 0);
+                    $total = (int) ($stats->total ?? 0);
+                    $notpublished = $total - $published;
+
+                    return "{$notpublished} / {$published} / {$total}";
+                }),
 
             Menu::make(__('Users'))
                 ->icon('bs.people')
