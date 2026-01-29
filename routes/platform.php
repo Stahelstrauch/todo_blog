@@ -16,6 +16,7 @@ use App\Orchid\Screens\Post\PostEditScreen;
 use App\Orchid\Screens\Post\PostListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\Settings\CommentSettingsScreen;
 use App\Orchid\Screens\Todo\TodoEditScreen;
 use App\Orchid\Screens\Todo\TodoListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -136,3 +137,5 @@ Route::screen('posts/create', PostEditScreen::class)
 Route::screen('posts/{post}/edit', PostEditScreen::class)
     ->name('platform.posts.edit');
 
+Route::screen('settings/comments', CommentSettingsScreen::class)
+    ->name('platform.settings.comments');

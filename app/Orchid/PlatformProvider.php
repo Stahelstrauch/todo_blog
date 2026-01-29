@@ -98,6 +98,12 @@ class PlatformProvider extends OrchidServiceProvider
                     return "{$notpublished} / {$published} / {$total}";
                 }),
 
+            Menu::make('Kommentaarid')
+                ->title('Seaded')
+                ->icon('bs.chat-dots')
+                ->route('platform.settings.comments')    
+                ->permission('platform.settings.comments'),
+
             Menu::make(__('Users'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
@@ -141,7 +147,10 @@ class PlatformProvider extends OrchidServiceProvider
 
             ItemPermission::group('Blogi')
             //TODO Kolm veel tulevikus juurde
-                ->addPermission('platform.posts', 'Postituste haldus')
+                ->addPermission('platform.posts', 'Postituste haldus'),
+
+            ItemPermission::group('Seaded')  
+                ->addPermission('platform.settings.comments', 'Kommentaarid'),  
         ];
     }
 }
