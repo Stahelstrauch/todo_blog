@@ -10,7 +10,7 @@
         @else
             <div class="row g-4">
                 @foreach($posts as $post)
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 p-3 bg-warning border border-success col-md-6 col-lg-4">
                         <div class="card h-100">
                             {{-- Pilt nii oma kui default --}}
                             <img
@@ -67,7 +67,7 @@
                                 </p>
 
                                 <div class="mt-auto">
-                                    <a href="{{ route('posts.show', $post) }}" class="btn btn-primary">
+                                    <a href="{{ route('posts.show', $post) }}" class="btn btn-success">
                                         Loe edasi
                                     </a>
                                 </div>

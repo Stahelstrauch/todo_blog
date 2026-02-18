@@ -14,57 +14,129 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+
             {{-- Vasak pool --}}
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url('/') }}">
-                        <i class="fas fa-home text-primary"></i> Avaleht
+                    <a class="nav-link" href="{{ route('home') }}">
+                        Avaleht
                     </a>
                 </li>
             </ul>
 
             {{-- Parem pool --}}
             <ul class="navbar-nav ms-auto">
+
                 @guest
-                    {{-- Pole sisse loginud --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">
-                            <i class="fas fa-sign-in-alt"></i> Logi sisse
-                        </a>
-                    </li>
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                Logi sisse
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">
-                            <i class="fas fa-user-plus"></i> Registreeri
-                        </a>
-                    </li>
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">
+                                Registreeru
+                            </a>
+                        </li>
+                    @endif
                 @else
-                    {{-- Sisse loginud --}}
-                    @auth
-                        {{-- hasAccess on Orchid osa --}}
-                        @if(method_exists(auth()->user(), 'hasAccess') && auth()->user()->hasAccess('platform.index')) 
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/admin') }}">
-                                    <i class="fas fa-tools"></i> Admin paneel
-                                </a>
-                            </li>
-                        @endif
-                    @endauth
+                    {{-- Admin link (ainult administraatorile) --}}
+                    @if(method_exists(auth()->user(), 'hasAccess') && auth()->user()->hasAccess('platform.index')) 
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/admin') }}">
+                                <i class="fas fa-tools"></i> Admin paneel
+                            </a>
+                        </li>
+                    @endif
 
+                    {{-- NOTIFICATIONS (Variant 2) --}}
+                    @php
+                        $unreadCount = auth()->user()->unreadNotifications()->count();
+                        $unread = auth()->user()->unreadNotifications()->latest()->take(10)->get();
+                    @endphp
 
-                    <li class="nav-item">
-                        <a class="nav-link"
-                        href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fas fa-sign-out-alt"></i> Logi välja
+                    <li class="nav-item dropdown me-2">
+                        <a class="nav-link dropdown-toggle position-relative"
+                           href="#"
+                           id="notifDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+
+                            @if($unreadCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ $unreadCount }}
+                                </span>
+                            @endif
                         </a>
 
-                        <form id="logout-form"
-                            action="{{ route('logout') }}"
-                            method="POST"
-                            class="d-none">
-                            @csrf
-                        </form>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width: 320px;">
+                            <li class="dropdown-header d-flex justify-content-between align-items-center">
+                                <span>Teavitused</span>
+
+                                @if($unreadCount > 0)
+                                    <form method="POST" action="{{ route('notifications.readAll') }}">
+                                        @csrf
+                                        <button class="btn btn-sm btn-link text-decoration-none" type="submit">
+                                            Märgi kõik loetuks
+                                        </button>
+                                    </form>
+                                @endif
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            @forelse($unread as $n)
+                                <li>
+                                    <form method="POST" action="{{ route('notifications.read', $n->id) }}" class="px-3 py-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-link text-start p-0 text-decoration-none w-100">
+                                            <div class="fw-semibold">{{ data_get($n->data, 'title', 'Teavitus') }}</div>
+                                            <div class="small text-muted">{{ data_get($n->data, 'message', '') }}</div>
+                                        </button>
+                                    </form>
+                                </li>
+                            @empty
+                                <li class="px-3 py-2 text-muted">Uusi teavitusi pole.</li>
+                            @endforelse
+                        </ul>
+                    </li>
+
+                    {{-- Kasutaja dropdown --}}
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown"
+                           class="nav-link dropdown-toggle"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false"
+                           v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ url('home') }}">
+                                Minu avaleht
+                            </a>
+
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logi välja
+                            </a>
+
+                            <form id="logout-form"
+                                action="{{ route('logout') }}"
+                                method="POST"
+                                class="d-none">
+                                @csrf
+                            </form>
+                        </div>
                     </li>
                 @endguest
 

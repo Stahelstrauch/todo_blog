@@ -3,6 +3,8 @@
 namespace App\Orchid\Screens\Post;
 
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\PostPublished;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
@@ -263,7 +265,24 @@ class PostEditScreen extends Screen
             $post->save();
         }
 
-        // TODO: Notification
+        // Notification asjad
+        $newPublishedAt = $post->published_at;
+
+        $justBecomePublished = empty($oldPublishedAt)
+            && !empty($newPublishedAt)
+            && $newPublishedAt <= now();
+
+        if($justBecomePublished) {
+            $publisher = $request->user();
+
+            User::query()
+                ->whereKeyNot($publisher->id)
+                ->each(function ($user) use ($post, $publisher){
+                    $user->notify(new PostPublished(
+                        $post,
+                        $publisher->name ?? $publisher->email));
+                });    
+        }
 
         Toast::info('Postitus salvestatud!');
         return redirect()->route('platform.posts');

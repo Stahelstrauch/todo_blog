@@ -8,6 +8,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Switcher;
 use Orchid\Screen\Screen;
+use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -49,7 +50,8 @@ class CommentSettingsScreen extends Screen
         return [
             Button::make('Salvesta')
                 ->method('save')
-                ->icon('bs.check-circle'),
+                ->icon('bs.check-circle')
+                ->type(Color::SUCCESS),
         ];
     }
 
