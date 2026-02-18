@@ -107,12 +107,17 @@ class PlatformProvider extends OrchidServiceProvider
                 ->title('Seaded')
                 ->icon('bs.chat-dots')
                 ->route('platform.settings.comments')    
-                ->permission('platform.settings.comments'),
+                ->permission('platform.settings.comments'), 
 
-            Menu:: make('Piltide puhastus')
+            Menu::make('Piltide puhastus')
                 ->icon('bs.trash')
                 ->route('platform.settings.attachments')
                 ->permission('platform.settings.attachments'),
+
+            Menu::make('Reaktsioonid')
+                ->icon('bs.emoji-smile')
+                ->route('platform.settings.reactions'),
+            
 
             Menu::make(__('Users'))
                 ->icon('bs.people')
@@ -162,6 +167,7 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group('Seaded')  
                 ->addPermission('platform.settings.comments', 'Kommentaarid')
                 ->addPermission('platform.settings.attachments', 'Piltide puhastus') 
+                ->addPermission('platform.settings', 'Reaktsioonid') 
 
         ];
     }

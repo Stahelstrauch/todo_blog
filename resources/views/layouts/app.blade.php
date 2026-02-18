@@ -33,6 +33,9 @@
         </div>
     </footer>
 
+    {{-- Teated --}}
+    @include('partials.toast')
+
     {{-- Vajalik @push('scripts') jaoks --}}
     @stack('scripts') 
 </body>

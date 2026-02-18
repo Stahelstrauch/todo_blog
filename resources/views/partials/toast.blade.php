@@ -29,3 +29,16 @@
     @endif
 
 </div>
+<script>
+    @push('scripts')
+<script>    
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toast').forEach(function (toastEl) {
+            new bootstrap.Toast(toastEl, {
+                delay: 10000 // 10 sek.
+            }).show();
+        });
+    });
+</script>
+@endpush
+</script>

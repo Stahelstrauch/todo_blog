@@ -11,8 +11,9 @@ class PostController extends Controller
         $posts = Post::query()
             ->published() // scopePublished = Post mudelis
             ->withCount('comments')
+            ->withAvg('reactions', 'value') // Uus rida
             ->latest('published_at')
-            ->paginate(5);
+            ->paginate(6);
 
         return view('welcome', compact('posts'));    
     }
@@ -21,7 +22,13 @@ class PostController extends Controller
         $post = Post::query()
             ->published() // scopePublished = Post mudelis
             ->where('slug', $slug)
-            // TODO myreaction
+            ->with(['myReaction'])
+            ->withCount([
+                'reactions as reaction_1_count' => fn ($q) => $q->where('value', 1),
+                'reactions as reaction_2_count' => fn ($q) => $q->where('value', 2),
+                'reactions as reaction_3_count' => fn ($q) => $q->where('value', 3),
+                'reactions as reaction_total' => fn ($q) => $q,
+            ])
             ->firstOrFail();
         return view('posts.show', compact('post'));
     }

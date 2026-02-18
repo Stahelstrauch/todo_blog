@@ -18,6 +18,7 @@ use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\Settings\AttachmentCleanupScreen;
 use App\Orchid\Screens\Settings\CommentSettingsScreen;
+use App\Orchid\Screens\Settings\ReactionSettingsScreen;
 use App\Orchid\Screens\Todo\TodoEditScreen;
 use App\Orchid\Screens\Todo\TodoListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -143,3 +144,6 @@ Route::screen('settings/comments', CommentSettingsScreen::class)
 
 Route::screen('settings/attachments', AttachmentCleanupScreen::class)
     ->name('platform.settings.attachments');
+
+Route::screen('settings/reactions', ReactionSettingsScreen::class)
+    ->name('platform.settings.reactions');
