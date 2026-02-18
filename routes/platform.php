@@ -16,6 +16,7 @@ use App\Orchid\Screens\Post\PostEditScreen;
 use App\Orchid\Screens\Post\PostListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\Settings\AttachmentCleanupScreen;
 use App\Orchid\Screens\Settings\CommentSettingsScreen;
 use App\Orchid\Screens\Todo\TodoEditScreen;
 use App\Orchid\Screens\Todo\TodoListScreen;
@@ -139,3 +140,6 @@ Route::screen('posts/{post}/edit', PostEditScreen::class)
 
 Route::screen('settings/comments', CommentSettingsScreen::class)
     ->name('platform.settings.comments');
+
+Route::screen('settings/attachments', AttachmentCleanupScreen::class)
+    ->name('platform.settings.attachments');

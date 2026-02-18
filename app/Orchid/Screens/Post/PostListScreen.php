@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Post;
 
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -60,6 +61,8 @@ class PostListScreen extends Screen
     return [
         Layout::table('posts', [
             TD::make('title', 'Pealkiri')->sort(),
+
+            TD::make('author.name', 'Autor'), // Autor on alati sama meil
 
             TD::make('published_at', 'Olek')
                 ->sort()

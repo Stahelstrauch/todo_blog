@@ -36,6 +36,11 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
+            Menu::make('Avaleht')
+                ->icon('bs.house')
+                ->title('Avaleht')
+                ->url('/'), //kui sisseloginud kasutaja siis /home
+
             Menu::make('Get Started')
                 ->icon('bs.book')
                 ->title('Navigation')
@@ -104,6 +109,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.settings.comments')    
                 ->permission('platform.settings.comments'),
 
+            Menu:: make('Piltide puhastus')
+                ->icon('bs.trash')
+                ->route('platform.settings.attachments')
+                ->permission('platform.settings.attachments'),
+
             Menu::make(__('Users'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
@@ -150,7 +160,9 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.posts', 'Postituste haldus'),
 
             ItemPermission::group('Seaded')  
-                ->addPermission('platform.settings.comments', 'Kommentaarid'),  
+                ->addPermission('platform.settings.comments', 'Kommentaarid')
+                ->addPermission('platform.settings.attachments', 'Piltide puhastus') 
+
         ];
     }
 }
