@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\Comment\CommentListScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -147,3 +148,8 @@ Route::screen('settings/attachments', AttachmentCleanupScreen::class)
 
 Route::screen('settings/reactions', ReactionSettingsScreen::class)
     ->name('platform.settings.reactions');
+
+
+Route::screen('comments', CommentListScreen::class)
+    ->name('platform.comments');
+    

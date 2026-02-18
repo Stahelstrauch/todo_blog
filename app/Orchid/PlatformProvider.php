@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Todo;
 use Orchid\Platform\Dashboard;
@@ -102,6 +103,16 @@ class PlatformProvider extends OrchidServiceProvider
 
                     return "{$notpublished} / {$published} / {$total}";
                 }),
+            // Kommentaaride halus
+            Menu::make('Kommentaaride haldus')
+                ->icon('bs.chat-left-text')
+                ->route('platform.comments')
+                ->permission('platform.comments')
+                ->badge(function() {
+                    $total = Comment::count();
+                    $hidden = Comment::where('is_hidden', true)->count();
+                    return "{$hidden} / {$total}";
+                }),    
 
             Menu::make('Kommentaarid')
                 ->title('Seaded')
@@ -158,7 +169,8 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.systems.users', __('Users')),
 
             ItemPermission::group('Ise loodud')
-                ->addPermission('platform.todos', 'ToDo Haldamine'),
+                ->addPermission('platform.todos', 'ToDo Haldamine')
+                ->addPermission('platform.comments', 'Kommentaaride haldamine'),
 
             ItemPermission::group('Blogi')
             //TODO Kolm veel tulevikus juurde

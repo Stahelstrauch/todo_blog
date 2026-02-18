@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Filters\Filterable;
+use Orchid\Screen\AsSource;
 
 class Comment extends Model
 {
+    Use AsSource, Filterable;
+
+    
     protected $fillable = [
         'post_id',
         'user_id',
