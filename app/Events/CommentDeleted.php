@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,7 +19,12 @@ class CommentDeleted
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(
+        public Comment $comment,
+        public User $actor,
+        public string $ip,
+        public int $length,
+    )
     {
         //
     }

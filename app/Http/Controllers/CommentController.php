@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
+use App\Events\CommentCreateRejected;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Setting;
@@ -23,6 +25,17 @@ class CommentController extends Controller
         if(RateLimiter::tooManyAttempts($key, 1)) {
             $seconds = RateLimiter::availableIn($key);
 
+            // Audit log: rejected (rate limied)
+            CommentCreateRejected::dispatch(
+                $post,
+                $request->user(),
+                $request->ip(),
+                'rate_limited', [
+                    'seconds_remaining' => $seconds,
+                    'cooldown_minutes' => $minutes,
+                ]
+            );
+
             return back()->withErrors([
                 'comment' => "Saad uuesti kommenteerida umbes ($seconds) sek pärast.",
             ]);
@@ -35,13 +48,21 @@ class CommentController extends Controller
         ]);
 
         //Salvesta (sinu tabeli struktuur)
-        Comment::create([
+        $comment = Comment::create([
             'post_id' => $post->id,
             'user_id' => $request->user()->id,
             'comment' => $data['comment'],
             'is_hidden' => 0,
             'ip_address' => $request->ip(),
         ]);
+
+        // Audit_log:created
+        CommentCreated::dispatch(
+            $comment,
+            $request->user(),
+            $request->ip(),
+            mb_strlen((string) $comment->comment)
+        );
 
         return back()->with('success', 'Kommentaar lisatud!');
     }

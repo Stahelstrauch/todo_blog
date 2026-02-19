@@ -56,6 +56,7 @@ class CommentListLayout extends Table
                 ->filter(TD::FILTER_TEXT),
                 
             TD::make('is_hidden', 'Staatus')
+                ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(
                     Select::make('is_hidden')

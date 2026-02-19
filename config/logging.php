@@ -127,6 +127,13 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'comment_audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/comment_audit.log'),
+            'level' => 'info',
+            'days' => 30, // Hoiab 30 päeva
+        ]
+
     ],
 
 ];

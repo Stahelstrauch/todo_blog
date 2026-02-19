@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,7 +19,13 @@ class CommentCreateRejected
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(
+        public Post $post,
+        public User $actor,
+        public string $ip,
+        public string $reason, // nt: comments_disabled
+        public array $meta = [], // lisasinfo: seconds_remaining, cooldown_minutes jne
+    )
     {
         //
     }
