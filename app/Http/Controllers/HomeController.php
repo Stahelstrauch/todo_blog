@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DashboardStats;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,8 +22,17 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request, DashboardStats $stats)
     {
-        return view('home');
+        $user = $request->user();
+
+        $isAdmin = method_exists($user, 'hasAccess') && $user->hasAccess('platform.index');
+
+
+        return view('home', [
+            'isAdmin' => $isAdmin,
+            'userStats' => $stats->forUser($user),
+            'adminStats' => $isAdmin ? $stats->forAdmin() : null,
+        ]);
     }
 }
