@@ -8,10 +8,14 @@ use App\Models\Comment;
 use App\Notifications\CommentModerated;
 use App\Orchid\Layouts\Comment\CommentListLayout;
 use Illuminate\Http\Request;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Layout;
 
 class CommentListScreen extends Screen
 {
+    public ?Comment $selectedComment = null;
+
     /**
      * Fetch data to be displayed on the screen.
      *
@@ -25,6 +29,8 @@ class CommentListScreen extends Screen
                 ->filters()
                 ->defaultSort('created_at', 'desc')
                 ->paginate(5),
+
+            'selectedComment' => $this->selectedComment,    
         ];
     }
 
@@ -67,6 +73,7 @@ class CommentListScreen extends Screen
     {
         return [
             CommentListLayout::class,
+
         ];
     }
     public function toggleHidden(Request $request): void { // void - tähendab et ei tagasta midagi, pole return käsklust
@@ -124,8 +131,13 @@ class CommentListScreen extends Screen
                 action: 'deleted',
                 moderatorName: $request->user()?->name ?? 'Admin'
             ));
-
         }
+        
 
-    }
+    
+}
+
+
+
+
 }

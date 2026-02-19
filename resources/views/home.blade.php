@@ -200,6 +200,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">Todo tegevused</div>
+                    <div class="card-body">
+                        <div>Kokku todosid: <strong>{{ $adminStats['todos']['total'] }}</strong></div>
+                        <div>Tehtud todod: <strong>{{ $adminStats['todos']['done'] }}</strong></div>
+                        <div>Veel tegemata todod: <strong>{{ $adminStats['todos']['not_done'] }}</strong></div>
+                        <div>Järgmine todo teha: <strong>{{ $fmt($adminStats['todos']['due_at']) }}</strong></div>
+                        <div>Viimati loodud todo: <strong>{{ $fmt($adminStats['todos']['created_at']) }}</strong></div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 </div>

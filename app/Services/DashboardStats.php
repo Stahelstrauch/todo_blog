@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reaction;
+use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 
@@ -105,6 +106,12 @@ class DashboardStats {
             ->toArray();
 
         $lastReactionAt = Reaction::query()->latest('created_at')->value('created_at');
+
+        $todosTotal = Todo::query()->count();
+        $todosDone = Todo::query()->where('is_done', true)->count();
+        $todosNotDone =$todosTotal - $todosDone;
+        $todosDueAt = Todo::query()->latest('due_at')->value('due_at');
+        $todosCreatedAt = Todo::query()->latest('created_at')->value('created_at');
         
         return [
             'posts' => [
@@ -125,6 +132,13 @@ class DashboardStats {
                 'last_at' => $this->asCarbon($lastReactionAt),
                 'labels' => self::REACTION_LABELS,
             ],
+            'todos' => [
+                'total' => $todosTotal,
+                'done' => $todosDone,
+                'not_done' => $todosNotDone,
+                'due_at' => $this->asCarbon($todosDueAt),
+                'created_at' => $this->asCarbon($todosCreatedAt),
+            ]
         ];
     }
 

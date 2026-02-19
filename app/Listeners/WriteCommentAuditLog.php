@@ -31,7 +31,6 @@ class WriteCommentAuditLog
                     'comment_id' => $event->comment->id,
                     'post_id' => $event->comment->post_id,
                     'user_id' =>$event->comment->user->id,
-                    'actor_id' => $event->actor->id,
                     'ip' => $event->ip,
                     'meta' => [
                         'length' => $event->length,
@@ -41,7 +40,7 @@ class WriteCommentAuditLog
                 $event instanceof CommentCreateRejected => [
                     'event' => 'comment_create_rejected',
                     'post_id' => $event->post->id,
-                    'actor_id' => $event->actor->id,
+                    'user_id' => $event->actor->id,
                     'ip' => $event->ip,
                     'meta' => array_merge([
                         'reason' => $event->reason,
@@ -53,7 +52,7 @@ class WriteCommentAuditLog
                     'comment_id' => $event->comment->id,
                     'post_id' => $event->comment->post_id,
                     'user_id' =>$event->comment->user->id,
-                    'actor_id' => $event->actor->id,
+                    'admin_id' => $event->actor->id,
                     'ip' => $event->ip,
                     'meta' => [
                         'from' => $event->from,
@@ -66,7 +65,7 @@ class WriteCommentAuditLog
                     'comment_id' => $event->comment->id,
                     'post_id' => $event->comment->post_id,
                     'user_id' =>$event->comment->user->id,
-                    'actor_id' => $event->actor->id,
+                    'admin_id' => $event->actor->id,
                     'ip' => $event->ip,
                     'meta' => [
                         'length' => $event->length,

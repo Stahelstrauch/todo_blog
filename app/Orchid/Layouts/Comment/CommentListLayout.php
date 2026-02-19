@@ -7,6 +7,7 @@ use Orchid\Screen\TD;
 use App\Models\Comment;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Layouts\Modal;
 use Orchid\Support\Color;
 
 class CommentListLayout extends Table
@@ -55,52 +56,75 @@ class CommentListLayout extends Table
                 })
                 ->filter(TD::FILTER_TEXT),
                 
-            TD::make('is_hidden', 'Staatus')
-                ->sort()
-                ->align(TD::ALIGN_CENTER)
-                ->filter(
-                    Select::make('is_hidden')
-                        ->options([
-                            '0' => 'Nähtav',
-                            '1' => 'Peidetud'
-                        ])
-                        ->empty('Kõik')
-                ) 
-                ->render(function (comment $c) {
-                    return $c->is_hidden
-                        ? '<span class="badge bg-warning text-dark">Peidetud</span>'
-                        : '<span class="badge bg-success">Nähtav</span>';
-                }),
-                
             TD::make('action', 'Tegevused')
-                ->alignLeft()
-                ->render(function(Comment $c){
-                    $toggleIcon = $c->is_hidden ? 'bs.eye' : 'bs.eye-slash';
+    ->alignLeft()
+    ->render(function(Comment $c){
 
-                    return
-                        '<div class="d-flex align-items-center gap-2">'
-                        .
+        $toggleIcon = $c->is_hidden ? 'bs.eye' : 'bs.eye-slash';
 
-                        Button::make()
-                            ->icon($toggleIcon)
-                            ->class('btn text-primary')
-                            ->method('toggleHidden', ['comment' => $c->id])
-                            ->confirm('Kas oled kindel, et soovid muuta?')
-                            ->render()
+        $text = (string) $c->comment;
+        $isLong = mb_strlen($text) > 120;
 
-                            .
+        $viewButton = '';
 
-                            Button::make()
-                                ->icon('bs.trash')
-                                ->class('btn text-danger')
-                                ->method('remove', ['comment' => $c->id])
-                                ->confirm('Kustutamine on lõplik. Kas kustutada?')
-                                ->render()
+        if ($isLong) {
+    $viewButton = '
+        <button 
+                    type="button"
+                    class="btn btn-info btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#commentModal'.$c->id.'"
+                >
+                    <i class="bi bi-card-text"></i>
+                </button>
 
-                                .
-                                '</div>';
-                       
-                }),    
+        <div class="modal fade" id="commentModal'.$c->id.'" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kommentaar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        '.e($c->comment).'
+                    </div>
+                </div>
+            </div>
+        </div>
+    ';
+
+
+        }
+
+        return
+            '<div class="d-flex align-items-center gap-2">'
+            .
+            Button::make()
+                ->icon($toggleIcon)
+                ->class('btn text-primary')
+                ->method('toggleHidden', ['comment' => $c->id])
+                ->confirm('Kas oled kindel, et soovid muuta?')
+                ->render()
+
+            .
+
+            Button::make()
+                ->icon('bs.trash')
+                ->class('btn text-danger')
+                ->method('remove', ['comment' => $c->id])
+                ->confirm('Kustutamine on lõplik. Kas kustutada?')
+                ->render()
+
+            .
+
+            $viewButton
+
+            .
+
+            '</div>';
+    }),
+
+      
         ];
     }
 }
